@@ -1,0 +1,72 @@
+body {
+    background: #C5DDEB;
+    padding: 40px 0;
+}
+
+div#chat-widget {
+    min-height: 75vh;
+}
+
+ul#myTab1 {
+    min-height: 75vh;
+}
+
+div#chat-panel {
+    min-height: 62vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.send-message-action {
+    background: #3BAFDA;
+    padding: 11.9px;
+}
+
+button.btn.btn-primary.btn-ghost {
+    box-shadow: inset 0px 0px 0px 1px #fff;
+    border: 1px solid #fff;
+}
+
+img.img-rounded {
+    border-radius: 50%;
+    width: 60%;
+}
+
+ul#message-list li span.sent {
+    background: #dedede;
+    float: left;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+ul#message-list li {
+    padding: 5px 10px;
+    border-radius: 7px;
+    font-size: 1.1rem;
+    display: table;
+    width: 100%;
+}
+
+ul#message-list {
+    list-style: none;
+    max-height: 358px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+ul#message-list li div.sent {
+    background: #F5F7FA;
+    float: right;
+    color: #444;
+}
+
+ul#message-list li div {
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: #fff;
+}
+
+ul#message-list li div.recieved {
+    background: #967ADC;
+    float: left;
+}

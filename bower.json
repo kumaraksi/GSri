@@ -1,0 +1,17 @@
+{
+  "name": "GSri",
+  "description": "Chatbot",
+  "main": "server.js",
+  "authors": [
+    "aksi"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
