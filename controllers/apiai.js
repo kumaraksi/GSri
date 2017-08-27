@@ -1,13 +1,72 @@
 var apiai = require('apiai');
 var bot = apiai("c41c4e59a37643edb66bd3a5650a2c44");
+var request = require('request');
+var knowledgeBase = require('../models/intelligenceFunctions');
+
+function sendAnswerToUser(message, io) {
+    var messageToUser = {
+        content: message.question.answer
+    }
+    storeIntent(message, io);
+    io.to(message.question.asked_by).emit("sendToUser", messageToUser);
+}
+
+function storeIntent(message, io) {
+    var intentData = {
+        "name": message.question.question,
+        "auto": true,
+        "userSays": [{
+            "data": [{
+                "text": message.question.question
+            }],
+        }],
+        "responses": [{
+            "resetContexts": false,
+            "speech": message.question.answer
+        }],
+        "priority": 500000
+    }
+
+    var headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Bearer 65d0f774434f4e00a986d278909300b5'
+    };
+
+
+    var options = {
+        url: 'https://api.api.ai/v1/intents?v=20150910',
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(intentData)
+    };
+
+    function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body);
+        }
+    }
+
+    request(options, callback);
+
+}
 
 function getAnswerFromBot(message, io) {
     var nlpRequest = bot.textRequest(message.content, {
         sessionId: 'fffff'
     });
     nlpRequest.on('response', function(nlpResponse) {
-        var analyzedResponse = analyzeNlpResponse1(nlpResponse);
-        io.sockets.emit("sendToUser", analyzedResponse);
+        var analyzedResponse = analyzeNlpResponse1(nlpResponse, message);
+        var messageToPOC = {},
+            messageToUser = {};
+        messageToUser.content = analyzedResponse;
+        if (analyzedResponse.status === 404) {
+            messageToUser.content = "Stay tight. Calling in an expert for help. ";
+            analyzedResponse.savedQuestion.then(function(data) {
+                messageToPOC = data._doc;
+                io.to(message.departmentId).emit('askPOC', messageToPOC);
+            })
+        }
+        io.to(message.username).emit("sendToUser", messageToUser);
     });
 
     nlpRequest.on('error', function(error) {
@@ -21,12 +80,15 @@ function getAnswerFromBot(message, io) {
     nlpRequest.end();
 }
 
-function analyzeNlpResponse1(response) {
+function analyzeNlpResponse1(response, question) {
     console.log('[TRACE] analyzeNlpResponse');
     var result = response.result;
     //console.log(result);
     if (result.score == 0) { //ADD TO NLP
-        return 'I am currently in learning phase. I do not understand your question.'
+        return {
+            savedQuestion: sendQuestionToPOC(question),
+            status: 404
+        }
     } else {
         if (result.fulfillment.messages && result.fulfillment.messages.length > 0) {
             var messages = result.fulfillment.messages;
@@ -68,6 +130,10 @@ function checkforMessageType(message) {
     }
 }
 
+function sendQuestionToPOC(question) {
+    return knowledgeBase.storeQuestion(question);
+}
 module.exports = {
-    getAnswerFromBot: getAnswerFromBot
+    getAnswerFromBot: getAnswerFromBot,
+    sendAnswerToUser: sendAnswerToUser
 }

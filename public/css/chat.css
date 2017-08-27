@@ -19,7 +19,11 @@ div#chat-panel {
 
 .send-message-action {
     background: #3BAFDA;
-    padding: 11.9px;
+    padding: 12px;
+    position: absolute;
+    width: 811px;
+    right: 15px;
+    bottom: 20px;
 }
 
 button.btn.btn-primary.btn-ghost {
@@ -49,9 +53,10 @@ ul#message-list li {
 
 ul#message-list {
     list-style: none;
-    max-height: 358px;
+    max-height: 515px;
     overflow-y: auto;
     overflow-x: hidden;
+    /* background: #ddd; */
 }
 
 ul#message-list li div.sent {
@@ -69,4 +74,8 @@ ul#message-list li div {
 ul#message-list li div.recieved {
     background: #967ADC;
     float: left;
+}
+
+#answerQuestion .modal-dialog {
+    z-index: 2000;
 }

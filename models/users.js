@@ -28,6 +28,9 @@ var UserSchema = mongoose.Schema({
     created_on: {
         type: Date,
         default: Date.now
+    },
+    departmentPOC: {
+        type: Array
     }
 });
 //==============================================================================

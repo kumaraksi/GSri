@@ -4,7 +4,9 @@
 var
     express = require('express'),
     passport = require('../config/passport'),
-    utilities = require('../models/utilities');
+    utilities = require('../models/utilities'),
+    knowledgeBase = require('../models/intelligenceFunctions'),
+    apiai = require('../controllers/apiai');
 //==============================================================================
 /**
  *Create router instance
@@ -29,7 +31,10 @@ var
     findUser = utilities.findUser,
     viewAllUsers = utilities.viewAllUsers,
     updateUser = utilities.updateUser,
-    deleteUser = utilities.deleteUser;
+    deleteUser = utilities.deleteUser,
+    addAnswerToQuestion = knowledgeBase.addAnswerToQuestion,
+    findQuestionById = knowledgeBase.findQuestionById;
+
 //==============================================================================
 /**
  *Middleware
@@ -46,12 +51,15 @@ router.route('/login')
         return res.render('pages/login');
     })
     .post(function(req, res, next) {
+        //cr8NewUser(req, res);
         passport.authenticate('local-login', function(err, user, info) {
             if (err) {
                 return next(err); // will generate a 500 error
             }
             if (!user) {
-                return res.status(409).render('pages/login', { errMsg: info.errMsg });
+                return res.status(409).render('pages/login', {
+                    errMsg: info.errMsg
+                });
             }
             req.login(user, function(err) {
                 if (err) {
@@ -66,30 +74,21 @@ router.route('/login')
 router.get('/chat', isLoggedIn, function(req, res) {
     return res.render('pages/chat', {
         username: req.user.username,
-        email: req.user.email
+        email: req.user.email,
+        user: req.user
     });
 });
+
+router.post('/answer', isLoggedIn, function(req, res) {
+    addAnswerToQuestion(req, res);
+});
+
 
 router.get('/logout', function(req, res) {
     req.logout();
     req.session.destroy();
     return res.redirect('/');
 });
-//---------------------------API routes-----------------------------------------
-router.get('/api/users', function(req, res) {
-    return viewAllUsers(req, res);
-});
-
-router.route('/api/users/:email')
-    .get(function(req, res) {
-        return findUser(req, res);
-    })
-    .put(function(req, res) {
-        return update(req, res);
-    })
-    .delete(function(req, res) {
-        return deleteUser(req, res);
-    });
 //==============================================================================
 /**
  *Export Module

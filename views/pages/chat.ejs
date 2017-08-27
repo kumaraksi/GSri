@@ -2,64 +2,100 @@
 <!DOCTYPE html>
 
 <head>
-    <% include ../partials/head %>
-        <link rel="stylesheet" href="css/chat.css">
+	<% include ../partials/head %>
+		<link rel="stylesheet" href="css/chat.css">
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-2 col-xs-offset-1">
-                <div class="thumbnail">
-                    <img class="img-rounded" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_07.jpg">
-                    <div class="caption text-center">
-                        <h3 id="username">
-                            <%= username %>
-                        </h3>
-                        <a href="/logout" class="btn btn-warning" role="button">logout</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-8">
-                <div class="panel panel-info">
-                    <div class="tabbable tabs-left clearfix">
-                        <ul id="myTab1" class="nav nav-tabs">
-                            <li class="active"><a href="#chat-panel" data-toggle="tab" data-departmentId="1">HR</a></li>
-                            <li><a href="#chat-panel" data-toggle="tab" data-departmentId="2">IT</a></li>
-                            <li><a href="#chat-panel" data-toggle="tab" data-departmentId="3">Corp Services</a></li>
-                            <li>
-                                <a href="#chat-panel" data-toggle="tab" data-departmentId="4">Finance</a>
-                            </li>
-                            <li>
-                                <a href="#chat-panel" data-toggle="tab" data-departmentId="5">ESS</a>
-                            </li>
-                        </ul>
-                        <div id="myTabContent" class="tab-content">
-                            <div class="tab-pane fade active in" id="chat-panel">
-                                <div class="message-wrapper">
-                                    <ul id="message-list">
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="send-message-action">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="mssg">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-primary btn-ghost" id="sendMessageBtn" tabindex="-1">Send</button>
-                                </div>
-                            </div>
-                        </div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-2 col-xs-offset-1">
+				<div class="thumbnail">
+					<img class="img-rounded" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_07.jpg">
+					<div class="caption text-center">
+						<h3 id="username">
+							<%= username %>
+						</h3>
+						<a href="/logout" class="btn btn-warning" role="button">logout</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-8">
+				<div class="panel panel-info">
+					<div class="tabbable tabs-left clearfix">
+						<ul id="myTab1" class="nav nav-tabs">
+							<li class="active"><a href="#chat-panel" data-toggle="tab" data-departmentId="1">HR</a></li>
+							<li><a href="#chat-panel" data-toggle="tab" data-departmentId="2">IT</a></li>
+							<li><a href="#chat-panel" data-toggle="tab" data-departmentId="3">Corp Services</a></li>
+							<li>
+								<a href="#chat-panel" data-toggle="tab" data-departmentId="4">Finance</a>
+							</li>
+							<li>
+								<a href="#chat-panel" data-toggle="tab" data-departmentId="5">ESS</a>
+							</li>
+						</ul>
+						<div id="myTabContent" class="tab-content">
+							<div class="tab-pane fade active in" id="chat-panel">
+								<div class="message-wrapper">
+									<ul id="message-list">
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="send-message-action">
+							<div class="input-group">
+								<input type="text" class="form-control" id="mssg">
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-primary btn-ghost" id="sendMessageBtn" tabindex="-1">Send</button>
+								</div>
+							</div>
+						</div>
 
-                    </div>
+					</div>
 
-                </div>
-            </div>
-        </div>
-    </div>
-    <footer class="text-center">
-        <% include ../partials/footer %>
-            <script src="/socket.io/socket.io.js"></script>
-            <script src="/js/chat.js"></script>
-    </footer>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+<div class="modal" id="answerQuestion">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h4 class="modal-title">Question</h4>
+		</div>
+		<div class="modal-body">
+		<div class="row">
+			<div class="col-xs-12">
+			<label>Answer</label>
+			<textarea class="form-control" rows="6" id="answer">Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac</textarea>
+			</div>
+			<div class="col-xs-12">
+			<div class="form-group">
+				<label for="file">File input</label>
+				<input type="file" id="file" class="form-control">
+				<p class="help-block">Example block-level help text here.</p>
+			</div>
+			<div class="col-xs-12">
+				<label>Link</label>
+				<input type="text" class="form-control" placeholder="Text input" id="link">
+			</div>
+		</div>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-success" id="submitAnswer">Send</button>
+		</div>
+	</div>
+	</div>
+</div>
+	<footer class="text-center">
+		<% include ../partials/footer %>
+			<script>
+				var loggedInUser = <%- JSON.stringify(user) %>;
+			</script>
+			<script src="/socket.io/socket.io.js"></script>
+			<script src="/js/chat.js"></script>
+	</footer>
 </body>
