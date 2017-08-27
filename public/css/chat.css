@@ -1,5 +1,5 @@
 body {
-    background: #C5DDEB;
+    background: #F5F7FA;
     padding: 40px 0;
 }
 
@@ -9,6 +9,8 @@ div#chat-widget {
 
 ul#myTab1 {
     min-height: 75vh;
+    background: #434A54;
+    width: 12vw;
 }
 
 div#chat-panel {
@@ -21,34 +23,29 @@ div#chat-panel {
     background: #3BAFDA;
     padding: 12px;
     position: absolute;
-    width: 811px;
+    width: 52.6vw;
     right: 15px;
     bottom: 20px;
 }
 
 button.btn.btn-primary.btn-ghost {
-    box-shadow: inset 0px 0px 0px 1px #fff;
-    border: 1px solid #fff;
+    /* box-shadow: inset 0px 0px 0px 1px #fff; */
+    border: 1px solid #FFCE54;
+    background: #FFCE54;
+    color: #333;
 }
 
 img.img-rounded {
     border-radius: 50%;
-    width: 60%;
-}
-
-ul#message-list li span.sent {
-    background: #dedede;
-    float: left;
-    padding: 5px 10px;
-    border-radius: 3px;
+    width: 60px;
+    margin: 5px;
 }
 
 ul#message-list li {
-    padding: 5px 10px;
+    padding: 1px;
     border-radius: 7px;
     font-size: 1.1rem;
-    display: table;
-    width: 100%;
+    margin-bottom: 10px;
 }
 
 ul#message-list {
@@ -57,25 +54,62 @@ ul#message-list {
     overflow-y: auto;
     overflow-x: hidden;
     /* background: #ddd; */
-}
-
-ul#message-list li div.sent {
-    background: #F5F7FA;
-    float: right;
-    color: #444;
-}
-
-ul#message-list li div {
-    padding: 5px 10px;
-    border-radius: 3px;
-    color: #fff;
-}
-
-ul#message-list li div.recieved {
-    background: #967ADC;
-    float: left;
+    padding-left: 0px;
+    /* padding-top: 5px; */
+    padding-bottom: 15px;
 }
 
 #answerQuestion .modal-dialog {
     z-index: 2000;
+}
+
+ul#message-list li div.panel-footer {
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #F5F7FA;
+    float: left;
+    width: 100%;
+    margin-top: -5px;
+}
+
+ul#myTab1 li a {
+    color: #CCD1D9;
+}
+
+ul#myTab1 li.active a {
+    color: #434A54;
+}
+
+ul#myTab1 li.active a:hover {
+    color: #434A54;
+}
+
+ul#myTab1 li a:hover {
+    background: #656D78;
+    color: #fff;
+}
+
+.tabbable.tabs-left {
+    background: #E6E9ED;
+}
+
+ul#myTab1 li {
+    border: 1px solid #656D78;
+}
+
+ul#myTab1 li.active {
+    border: 0px solid transparent;
+}
+
+ul#message-list .panel-group-lists .panel-title a {
+    color: #3BAFDA;
+}
+
+ul#message-list .panel-body {
+    color: #656D78;
+}
+
+ul#message-list div.panel {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

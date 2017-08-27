@@ -33,7 +33,8 @@ var
     updateUser = utilities.updateUser,
     deleteUser = utilities.deleteUser,
     addAnswerToQuestion = knowledgeBase.addAnswerToQuestion,
-    findQuestionById = knowledgeBase.findQuestionById;
+    findQuestionById = knowledgeBase.findQuestionById,
+    unreadQuestions = knowledgeBase.unreadQuestions;
 
 //==============================================================================
 /**
@@ -81,6 +82,10 @@ router.get('/chat', isLoggedIn, function(req, res) {
 
 router.post('/answer', isLoggedIn, function(req, res) {
     addAnswerToQuestion(req, res);
+});
+
+router.post('/unreadQuestions', isLoggedIn, function(req, res) {
+    unreadQuestions(req, res);
 });
 
 

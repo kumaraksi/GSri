@@ -28,7 +28,8 @@ function storeQuestion(message) {
     return IntelligenceModel.create({
         question: message.content,
         departmentId: message.departmentId,
-        asked_by: message.username
+        asked_by: message.username,
+        answer: message.answer
     }, function(err, question) {
         if (err) {
             console.error('There was an error storing Question');
@@ -49,7 +50,8 @@ function addAnswerToQuestion(req, res) {
     var message = req.body;
     return IntelligenceModel.where({ _id: message.questionid }).update({
         answer: message.answer,
-        answered_by: message.answered_by
+        answered_by: message.answered_by,
+        isAnswered: true
     }, function(err) {
         if (err) {
             console.error('There was an error storing Question');
@@ -69,6 +71,31 @@ function addAnswerToQuestion(req, res) {
     });
 }
 
+function unreadQuestions(req, res) {
+    var username = req.body.username;
+    var message = req.body;
+    var whereClause = [];
+    var unreadQuestions = {
+        asked_by: username,
+        readByUser: false
+    }
+    whereClause.push(unreadQuestions);
+    if (req.body.departmentPOC) {
+        var unansweredQuestions = {
+            departmentId: { "$in": req.body.departmentPOC },
+            isAnswered: false
+        }
+        whereClause.push(unansweredQuestions);
+    }
+    return IntelligenceModel.find({ $or: whereClause },
+        function(err, data) {
+            if (err) return errHandler(err);
+            res.status(200).json({
+                messages: data
+            });
+        });
+}
+
 function findQuestionById(req, res) {
     return IntelligenceModel.findById(req.body.questionid);
 }
@@ -81,6 +108,7 @@ module.exports = {
     validationErr: validationErr,
     storeQuestion: storeQuestion,
     addAnswerToQuestion: addAnswerToQuestion,
-    findQuestionById: findQuestionById
+    findQuestionById: findQuestionById,
+    unreadQuestions: unreadQuestions
 };
 //==============================================================================

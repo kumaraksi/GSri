@@ -16,7 +16,7 @@ module.exports = function(server) {
             console.log('user disconnected');
         });
         socket.on('answerSaved', function(data) {
-            api.sendAnswerToUser(data, io);
+            api.sendAnswerToUser(data, socket);
         })
         socket.on('askBot', function(mssg) {
             var message = api.getAnswerFromBot(mssg, io);

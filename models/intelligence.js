@@ -43,7 +43,11 @@ var IntelligenceSchema = mongoose.Schema({
     readByUser: {
         type: Boolean,
         default: false
-    }
+    },
+    isAnswered: {
+        type: Boolean,
+        default: false
+    },
 });
 //==============================================================================
 /**

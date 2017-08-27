@@ -4,10 +4,8 @@ var request = require('request');
 var knowledgeBase = require('../models/intelligenceFunctions');
 
 function sendAnswerToUser(message, io) {
-    var messageToUser = {
-        content: message.question.answer
-    }
-    storeIntent(message, io);
+    var messageToUser = message.question;
+    storeIntent(message);
     io.to(message.question.asked_by).emit("sendToUser", messageToUser);
 }
 
@@ -58,15 +56,22 @@ function getAnswerFromBot(message, io) {
         var analyzedResponse = analyzeNlpResponse1(nlpResponse, message);
         var messageToPOC = {},
             messageToUser = {};
-        messageToUser.content = analyzedResponse;
+        messageToUser.question = message.content;
+        messageToUser.departmentId = message.departmentId;
+        messageToUser.asked_by = message.username;
+
         if (analyzedResponse.status === 404) {
-            messageToUser.content = "Stay tight. Calling in an expert for help. ";
             analyzedResponse.savedQuestion.then(function(data) {
                 messageToPOC = data._doc;
                 io.to(message.departmentId).emit('askPOC', messageToPOC);
+
+                messageToUser = data._doc;
+                io.to(message.username).emit("sendToUser", messageToUser);
             })
+        } else {
+            messageToUser.answer = analyzedResponse;
+            io.to(message.username).emit("sendToUser", messageToUser);
         }
-        io.to(message.username).emit("sendToUser", messageToUser);
     });
 
     nlpRequest.on('error', function(error) {
@@ -131,6 +136,7 @@ function checkforMessageType(message) {
 }
 
 function sendQuestionToPOC(question) {
+    question.answer = "Stay tight. Calling in an expert for help. ";
     return knowledgeBase.storeQuestion(question);
 }
 module.exports = {
